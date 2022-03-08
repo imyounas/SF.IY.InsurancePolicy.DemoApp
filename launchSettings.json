@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "serviceActions": {
+        "iyc-rabbitmq": "StartWithoutDebugging",
+        "sf.iy.insurancepolicydemoapp": "StartDebugging"
+      },
+      "commandVersion": "1.0"
+    }
+  }
+}
