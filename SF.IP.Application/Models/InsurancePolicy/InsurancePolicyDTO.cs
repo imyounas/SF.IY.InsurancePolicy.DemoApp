@@ -9,7 +9,7 @@ namespace SF.IP.Application.Models.InsurancePolicy
 {
     public record InsurancePolicyDTO
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public DateTime EffectiveDate { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -17,6 +17,7 @@ namespace SF.IP.Application.Models.InsurancePolicy
         public AddressDTO Address { get; set; }
         public PremiumPriceDTO PremiumPrice { get; set; }
         public DateTime ExpirationDate { get; set; }
+        public string VehicleDetailId { get; set; }
         public VehicleDTO VehicleDetail { get; set; }
 
         public override string ToString()

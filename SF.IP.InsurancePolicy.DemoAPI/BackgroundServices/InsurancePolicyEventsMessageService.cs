@@ -35,7 +35,7 @@ namespace PM.IY.EmailRouterDemoApp.BackgroundServices
         {
             _appSettings = appSettings;
             _logger = logger;
-            _mqConnectionPool = new DefaultObjectPool<IModel>(objectPolicy, SF.IP.Application.Common.Constants.MAX_RETAINED_MQ_CONNECTIONS);
+            _mqConnectionPool = new DefaultObjectPool<IModel>(objectPolicy, SF.IP.Application.Common.SFConstants.MAX_RETAINED_MQ_CONNECTIONS);
             _channel = _mqConnectionPool.Get();
             _exchangeType = ExchangeType.Topic;
             _mediator = mediator;

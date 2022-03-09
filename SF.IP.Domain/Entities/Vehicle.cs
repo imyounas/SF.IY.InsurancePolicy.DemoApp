@@ -12,7 +12,7 @@ namespace SF.IP.Domain.Entities
         public Vehicle()
         {
             //Id = Guid.NewGuid();
-            //Events = new List<DomainEvent>();
+            Events = new List<DomainEvent>();
         }
 
         //public List<DomainEvent> Events { get; set; }

@@ -26,6 +26,6 @@
 	  <ProjectReference Include="..\SF.IP.Application\SF.IP.Application.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Database\Migration\" />
+	  <Folder Include="Database\Migrations\" />
 	</ItemGroup>
 </Project>

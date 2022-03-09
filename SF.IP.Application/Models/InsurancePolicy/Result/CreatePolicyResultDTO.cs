@@ -8,6 +8,6 @@ namespace SF.IP.Application.Models.InsurancePolicy.Result
 {
     public class CreatePolicyResultDTO:BaseResultDTO
     {
-        public Guid PolicyId { get; set; } // new created policyId
+        public string PolicyId { get; set; } // new created policyId
     }
 }

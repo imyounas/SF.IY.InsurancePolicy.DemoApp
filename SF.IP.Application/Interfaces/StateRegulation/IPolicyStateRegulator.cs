@@ -9,6 +9,6 @@ namespace SF.IP.Application.Interfaces.StateRegulation
 {
     public interface IPolicyStateRegulator
     {
-        Task<(bool status, string reason)> ValidatePolicyFromStateRegulator(InsurancePolicyDTO policy);
+        Task<(bool Status, string Reason)> ValidatePolicyFromStateRegulator(InsurancePolicyDTO policy);
     }
 }

@@ -8,7 +8,7 @@ namespace SF.IP.Application.Models.InsurancePolicy
 {
     public class VehicleDTO
     {   
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public int Year { get; set; }
         public string Model { get; set; }
         public string Manufacturer { get; set; }

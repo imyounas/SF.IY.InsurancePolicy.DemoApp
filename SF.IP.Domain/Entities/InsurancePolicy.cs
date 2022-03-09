@@ -9,18 +9,14 @@ using System.Threading.Tasks;
 
 namespace SF.IP.Domain.Entities
 {
-    /*
-     * 
-     * 1.	Required Params: Effective Date, First Name, Last Name, Drivers License #, 
-     * Vehicle details (Year, Model, Manufacturer, Vehicle Name), Address, Expiration Date, Premium (price). 
-     * */
+
     // This will work as AggregateRoot 
     public class InsurancePolicy : BaseEntity
     {
         public InsurancePolicy()
         {
             //Id = Guid.NewGuid();
-            //Events = new List<DomainEvent>();
+            Events = new List<DomainEvent>();
         }
 
         //public Guid Id { get; set; }

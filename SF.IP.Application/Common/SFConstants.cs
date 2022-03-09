@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace SF.IP.Application.Common
 {
-    public static class Constants
+    public static class SFConstants
     {
         public const int MAX_RETAINED_MQ_CONNECTIONS = 5;
 
         public const string LICENSE_REGEX = @"^[A-Z](?:\d[- ]*){14}$";
-        public const string US_STREET_ADDRESS_REGEX = @"\b\d{1,8}(-)?[a-z]?\W[a-z|\W|\.]{1,}\W(road|drive|avenue|boulevard|circle|street|lane|waylrd\.|st\.|dr\.|ave\.|blvd\.|cir\.|In\.|rd|dr|ave|blvd|cir|ln)";
 
         public const string INVALID_EFFECTIVE_DATE = "E101";
         public const string INVALID_VEHICLE_REG_YEAR = "E102";
@@ -25,11 +24,11 @@ namespace SF.IP.Application.Common
         public const string INVALID_US_ADDRESS = "E110";
 
         public static readonly Dictionary<string, string> ErrorCodeMessages;
-        static Constants()
+        static SFConstants()
         {
             ErrorCodeMessages = new Dictionary<string, string>();
             ErrorCodeMessages.Add(INVALID_EFFECTIVE_DATE, "Effective Date should be atleast 30 days in future");
-            ErrorCodeMessages.Add(INVALID_VEHICLE_REG_YEAR, "Vechile Registeration Date should be before 1998");
+            ErrorCodeMessages.Add(INVALID_VEHICLE_REG_YEAR, "Does not meet 'Classic Vehicle' category. Vechile Registeration Date should be before 1998");
             ErrorCodeMessages.Add(INVALID_LICENSE_NUMBER, "Invalid License Number");
             //ErrorCodeMessages.Add(INVALID_USA_ADDRESS, "Provided address is not a valid USA Address");
             ErrorCodeMessages.Add(INVALID_FIRSTNAME, "Invalid First Name");

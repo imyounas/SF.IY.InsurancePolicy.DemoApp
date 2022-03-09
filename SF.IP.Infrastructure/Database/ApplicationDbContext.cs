@@ -16,9 +16,9 @@ namespace SF.IP.Infrastructure.Database
 {
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        private readonly IMediator? _mediator;
+        private readonly IMediator _mediator;
         public ApplicationDbContext(
-        DbContextOptions<ApplicationDbContext> options , IMediator? mediator) : base(options)
+        DbContextOptions<ApplicationDbContext> options , IMediator mediator) : base(options)
         {
             _mediator = mediator;
         }
@@ -31,6 +31,14 @@ namespace SF.IP.Infrastructure.Database
         {
 
             builder
+             .Entity<InsurancePolicy>()
+             .HasKey(x => x.Id);
+
+            builder
+             .Entity<InsurancePolicy>()
+             .Property(x => x.Id).HasDefaultValueSql("NEWID()");
+
+            builder
               .Entity<InsurancePolicy>()
               .OwnsOne(p => p.PremiumPrice);
             
@@ -41,6 +49,14 @@ namespace SF.IP.Infrastructure.Database
             builder
               .Entity<InsurancePolicy>()
               .Ignore(p => p.Events);
+
+            builder
+             .Entity<Vehicle>()
+             .HasKey(x => x.Id);
+
+            builder
+             .Entity<Vehicle>()
+             .Property(x => x.Id).HasDefaultValueSql("NEWID()");
 
             builder
               .Entity<Vehicle>()

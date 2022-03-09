@@ -43,7 +43,7 @@ namespace SF.IP.Application.Mediators.InsurancyPolicy.Query
             // in cases where we could have complex query filter criteria, with optional inclusion exclusion of resultant columns
             // it is better to use Specification pattern with proper repositories. 
 
-            if (string.IsNullOrWhiteSpace(request.LicenseNumber) || !Regex.Match(request.LicenseNumber, Common.Constants.LICENSE_REGEX, RegexOptions.IgnoreCase).Success)
+            if (string.IsNullOrWhiteSpace(request.LicenseNumber) || !Regex.Match(request.LicenseNumber, Common.SFConstants.LICENSE_REGEX, RegexOptions.IgnoreCase).Success)
             {
                 result.IsSuccesfull = false;
                 result.Errors.Add("Invalid License Number");
@@ -70,7 +70,7 @@ namespace SF.IP.Application.Mediators.InsurancyPolicy.Query
 
             result.IsSuccesfull = true;
 
-            return result;
+            return await Task.FromResult(result); ;
 
         }
     }

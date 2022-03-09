@@ -13,15 +13,15 @@ namespace SF.IP.Domain.Common
 
         // in real application we could have separate interface, or base class for domain events.
         // so only entities or AggregateRoots could implement that interface
-        public List<DomainEvent> Events  = new List<DomainEvent>();
-        
+        public List<DomainEvent> Events { get; set; }
+
         // similarly we could have separate interface for this auditing behaviour, so only entities which need could implement it
         public DateTime CreatedAt { get; set; }
 
-        public string? CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
 
         public DateTime? LastModifiedAt { get; set; }
 
-        public string? LastModifiedBy { get; set; }
+        public string LastModifiedBy { get; set; }
     }
 }

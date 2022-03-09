@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using SF.IP.Application.Common;
 using SF.IP.Application.Interfaces.Database;
 using SF.IP.Application.Models.InsurancePolicy;
 using System;
@@ -18,19 +19,15 @@ namespace SF.IP.Application.Validators.PolicyInsurance
             var utcNow = DateTime.UtcNow;
             _dbContext = dbContext;
 
-            RuleFor(x => x.FirstName).NotEmpty().WithMessage(Common.Constants.INVALID_FIRSTNAME)
-                                        .MinimumLength(3).WithMessage(Common.Constants.INVALID_FIRSTNAME);
+            RuleFor(x => x.FirstName).MinimumLength(3).WithMessage(SFConstants.ErrorCodeMessages[SFConstants.INVALID_FIRSTNAME]);
             
-            RuleFor(x => x.LastName).NotEmpty().WithMessage(Common.Constants.INVALID_LASTNAME)
-                               .MinimumLength(3).WithMessage(Common.Constants.INVALID_LASTNAME);
+            RuleFor(x => x.LastName).MinimumLength(3).WithMessage(SFConstants.ErrorCodeMessages[SFConstants.INVALID_LASTNAME]);
 
-            RuleFor(x => x.Address.Street).NotEmpty().WithMessage(Common.Constants.INVALID_ADDRESS_STREET);
-            RuleFor(x => x.Address.Street).MinimumLength(5).WithMessage(Common.Constants.INVALID_ADDRESS_STREET);
-            RuleFor(x => x.Address.Street).Matches(Common.Constants.US_STREET_ADDRESS_REGEX).WithMessage(Common.Constants.INVALID_ADDRESS_STREET);
+            RuleFor(x => x.Address.Street).MinimumLength(5).WithMessage(SFConstants.ErrorCodeMessages[SFConstants.INVALID_ADDRESS_STREET]);
 
-            RuleFor(x => x.Address.ZipCode).NotEmpty().WithMessage(Common.Constants.INVALID_US_ADDRESS);
-            RuleFor(x => x.Address.City).NotEmpty().WithMessage(Common.Constants.INVALID_US_ADDRESS);
-            RuleFor(x => x.Address.State).NotEmpty().WithMessage(Common.Constants.INVALID_US_ADDRESS);
+            RuleFor(x => x.Address.ZipCode).MinimumLength(3).WithMessage(SFConstants.ErrorCodeMessages[SFConstants.INVALID_US_ADDRESS]);
+            RuleFor(x => x.Address.City).MinimumLength(3).WithMessage(SFConstants.ErrorCodeMessages[SFConstants.INVALID_US_ADDRESS]);
+            RuleFor(x => x.Address.State).MinimumLength(2).WithMessage(SFConstants.ErrorCodeMessages[SFConstants.INVALID_US_ADDRESS]);
 
             RuleFor(x => x.Address).Custom((address, context) =>
             {
@@ -39,19 +36,18 @@ namespace SF.IP.Application.Validators.PolicyInsurance
                 && (z.StateName == smallAddress.State || z.StateCode == smallAddress.State));
                 if (!found)
                 {
-                    context.AddFailure(GetValidationFailure(Common.Constants.INVALID_US_ADDRESS));
+                    context.AddFailure(GetValidationFailure(SFConstants.INVALID_US_ADDRESS));
                 }
             });
 
             //https://regex101.com/r/iW31BV/2/
-            RuleFor(x => x.LicenseNumber).NotEmpty().WithErrorCode(Common.Constants.LICENSE_REGEX);
-            RuleFor(x => x.LicenseNumber).Matches(Common.Constants.LICENSE_REGEX).WithErrorCode(Common.Constants.LICENSE_REGEX);
+            RuleFor(x => x.LicenseNumber).Matches(SFConstants.LICENSE_REGEX).WithErrorCode(SFConstants.ErrorCodeMessages[SFConstants.INVALID_LICENSE_NUMBER]);
 
             RuleFor(x => x.EffectiveDate).Custom((effectiveDate, context) =>
             {  
                 if (effectiveDate == DateTime.MinValue || (effectiveDate - utcNow).TotalDays < 30)
                 {
-                    context.AddFailure(GetValidationFailure(Common.Constants.INVALID_EFFECTIVE_DATE));
+                    context.AddFailure(GetValidationFailure(SFConstants.INVALID_EFFECTIVE_DATE));
                 }
             });
 
@@ -59,7 +55,7 @@ namespace SF.IP.Application.Validators.PolicyInsurance
             {
                 if (expirationDate == DateTime.MinValue || (expirationDate - utcNow).TotalDays < 60)
                 {
-                    context.AddFailure(GetValidationFailure(Common.Constants.INVALID_EXPIRATION_DATE));
+                    context.AddFailure(GetValidationFailure(SFConstants.INVALID_EXPIRATION_DATE));
                 }
             });
 
@@ -67,14 +63,14 @@ namespace SF.IP.Application.Validators.PolicyInsurance
             {
                 if (registerationYear >= 1998)
                 {
-                    context.AddFailure(GetValidationFailure(Common.Constants.INVALID_VEHICLE_REG_YEAR));
+                    context.AddFailure(GetValidationFailure(SFConstants.INVALID_VEHICLE_REG_YEAR));
                 }
             });
         }
 
         private ValidationFailure GetValidationFailure(string errorCode)
         {
-            var failure = new ValidationFailure("", "");
+            var failure = new ValidationFailure("", SFConstants.ErrorCodeMessages[errorCode]);
             failure.ErrorCode = errorCode;
             return failure;
         }

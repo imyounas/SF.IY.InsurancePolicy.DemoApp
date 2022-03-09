@@ -9,6 +9,8 @@ using RabbitMQ.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SF.IP.Application.Common;
+using SF.IP.Infrastructure.StateRegulation;
+using SF.IP.Application.Interfaces.StateRegulation;
 
 namespace SF.IP.Infrastructure
 {
@@ -37,7 +39,7 @@ namespace SF.IP.Infrastructure
             services.AddSingleton<IPooledObjectPolicy<IModel>, RabbitMQPooledObjectPolicy>();
             services.AddSingleton<IMQPublisher, MQPublisher>();
             services.AddSingleton<ICacheManager, CacheManager>();
-
+            services.AddScoped<IPolicyStateRegulator, PolicyStateRegulator>();
 
             return services;
         }

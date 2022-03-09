@@ -19,7 +19,7 @@ namespace SF.IP.Infrastructure.MessageQueueHandler
         public MQPublisher(IPooledObjectPolicy<IModel> objectPolicy, ILogger<RabbitMQPooledObjectPolicy> logger)
         {
             _logger = logger;
-            _mqConnectionPool = new DefaultObjectPool<IModel>(objectPolicy, Application.Common.Constants.MAX_RETAINED_MQ_CONNECTIONS);
+            _mqConnectionPool = new DefaultObjectPool<IModel>(objectPolicy, Application.Common.SFConstants.MAX_RETAINED_MQ_CONNECTIONS);
             _exchangeType = ExchangeType.Direct;
         }
 
@@ -82,7 +82,7 @@ namespace SF.IP.Infrastructure.MessageQueueHandler
                 _mqConnectionPool.Return(_channel);
             }
 
-            return  status;
+            return await Task.FromResult(status);
         }
     }
 }

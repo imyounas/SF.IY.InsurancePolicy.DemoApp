@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace SF.IP.Application.Mediators.InsurancyPolicy.Query
     public class GetPolicyByIdQuery : IRequest<GetPolicyByIdResultDTO>
     {
         public Guid PolicyId { get; set; }
+        public string LicenseNumber { get; set; }
     }
 
     public class GetPolicyByIdQueryHandler : IRequestHandler<GetPolicyByIdQuery, GetPolicyByIdResultDTO>
@@ -47,8 +49,16 @@ namespace SF.IP.Application.Mediators.InsurancyPolicy.Query
                 return result;
             }
 
-            _logger.LogDebug($"Getting Insurance Policy by Id [{request.PolicyId}]");
-            var policy = _dbContext.InsurancePolicies.FirstOrDefault(p => p.Id == request.PolicyId);
+            if (string.IsNullOrWhiteSpace(request.LicenseNumber) || !Regex.Match(request.LicenseNumber, Common.SFConstants.LICENSE_REGEX, RegexOptions.IgnoreCase).Success)
+            {
+                result.IsSuccesfull = false;
+                result.Errors.Add("Invalid License Number");
+                return result;
+            }
+
+            // I think here for this Query, License number requirenment has been added by mistake ??
+            _logger.LogDebug($"Getting Insurance Policy by Id [{request.PolicyId}] & License Number [{request.LicenseNumber}]");
+            var policy = _dbContext.InsurancePolicies.FirstOrDefault(p => p.Id == request.PolicyId && p.LicenseNumber.Equals(request.LicenseNumber, StringComparison.OrdinalIgnoreCase));
 
             if(policy == null)
             {
@@ -62,7 +72,7 @@ namespace SF.IP.Application.Mediators.InsurancyPolicy.Query
             result.InsurancePolicy = _mapper.Map<InsurancePolicy, InsurancePolicyDTO>(policy);
             result.IsSuccesfull = true;
 
-            return result;
+            return await Task.FromResult(result); ;
 
         }
     }
