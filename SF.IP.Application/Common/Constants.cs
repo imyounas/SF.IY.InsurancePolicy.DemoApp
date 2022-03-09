@@ -11,6 +11,7 @@ namespace SF.IP.Application.Common
         public const int MAX_RETAINED_MQ_CONNECTIONS = 5;
 
         public const string LICENSE_REGEX = @"^[A-Z](?:\d[- ]*){14}$";
+        public const string US_STREET_ADDRESS_REGEX = @"\b\d{1,8}(-)?[a-z]?\W[a-z|\W|\.]{1,}\W(road|drive|avenue|boulevard|circle|street|lane|waylrd\.|st\.|dr\.|ave\.|blvd\.|cir\.|In\.|rd|dr|ave|blvd|cir|ln)";
 
         public const string INVALID_EFFECTIVE_DATE = "E101";
         public const string INVALID_VEHICLE_REG_YEAR = "E102";
