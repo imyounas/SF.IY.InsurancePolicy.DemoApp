@@ -29,17 +29,17 @@ namespace SF.IP.Application.Models.InsurancePolicy
     public record AddressDTO
     {
         //[Required(ErrorMessage = "Street in Address is required")]
-        public string Street { get; private set; }
+        public string Street { get;  set; }
         //[Required(ErrorMessage = "City in Address is required")]
-        public string City { get; private set; }
+        public string City { get;  set; }
         //[Required(ErrorMessage = "State in Address is required")]
-        public string State { get; private set; }
+        public string State { get;  set; }
         
         //[Required(ErrorMessage = "Country in Address is required")]
         //public string Country { get; private set; }
         
         //[Required(ErrorMessage = "ZipCode in Address is required")]
-        public string ZipCode { get; private set; }
+        public string ZipCode { get;  set; }
 
     }
 

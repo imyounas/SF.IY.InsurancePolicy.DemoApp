@@ -25,6 +25,7 @@ namespace SF.IP.Infrastructure.Database
 
         public DbSet<InsurancePolicy> InsurancePolicies => Set<InsurancePolicy>();
         public DbSet<Vehicle> Vehicles => Set<Vehicle>();
+        public DbSet<USZip> USZips => Set<USZip>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

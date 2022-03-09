@@ -11,6 +11,7 @@ namespace SF.IP.Application.Interfaces.Database
         DbSet<InsurancePolicy> InsurancePolicies { get; }
 
         DbSet<Vehicle> Vehicles { get; }
+        DbSet<USZip> USZips { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

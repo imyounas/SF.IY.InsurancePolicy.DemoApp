@@ -40,7 +40,7 @@ namespace SF.IP.Application.Mediators.InsurancyPolicy.Command
         {
             _logger.LogDebug($"Creatiing Insurance Policy - [{request.InsurancePolicy.ToString()}]");
 
-            ValidationResult modelResults = new PolicyValidator().Validate(request.InsurancePolicy);
+            ValidationResult modelResults = new PolicyValidator(_dbContext).Validate(request.InsurancePolicy);
 
             CreatePolicyResultDTO result = new CreatePolicyResultDTO();
 
