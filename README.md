@@ -29,7 +29,7 @@ Once Insurance Policy has been created successfully then a Domain Event is fired
 The State Regulation Validation service has been implemented in 'SF.IP.Infrastructure' project. For unit testing, I have added some predictable behavior in it. And instead of randomly approving or rejecting insurance policy. It decides based on the policy holder's first name.
  Regarding, the State Regulation Validation service, being a synchronous operation, (in real world scenario) I will discuss it with my PO/Client and propose to create a Policy with 'Pending' status and once we get approval or rejection from an asynchronous operation (3rd party API call) then notify the User and UI/Dashboard.
  
-![Solution Overview](https://github.com/imyounas/SF.IY.InsurancePolicy.DemoApp/SF.IY.InsurancePolicy.DempAPI.png "Solution Overview")
+![Solution Overview](https://github.com/imyounas/SF.IY.InsurancePolicy.DemoApp/blob/main/SF.IY.InsurancePolicy.DempAPI.png "Solution Overview")
 
 API also provides Query/Read operations, one can get Policies by providing a valid License Number with some optional params (sorting order and inclusion of expired policies). Users can also get a single Policy by providing its Id and LicenseNumber (though I am not sure why do we need a License Number here ?)
 
@@ -79,7 +79,7 @@ Either use Visual Studio Docker Compose Tools to run the whole solution. Or you 
 AppSettings file is configured to connect to RabbitMQ on 'localhost'. You can change its value or can also provide equivalent Environment variables against AppSettings variables as done in Docker Compose file.
 If you want to use real SQL Server, then you need to provide its connection string in AppSettings. Or set "UseInMemoryDatabase": true in AppSettings, to use InMemory database.
 
-## State Regulation Validation Method Improvement
+## State Regulation Validation Method Improvements
  I think once Insurance Policy has been created, then we should fire a Domain Event that will ingest/push it to a Message Queue. And the separate team working on it, implements a Microservice to perform the required operation/business logic in relation to State regulations there. And once they are done, then they should call main application API (Webhook/Callback URL), and then our application should notify the User and UI/Dashboard of the result.
 
 ## Transferring Code Ownership to a new Engineering Team
@@ -94,4 +94,4 @@ There are three main parts of this application and I am proposing following AWS 
 - RDBMS: As a best practice, we should containerize our Database. And If we have MS SQL Server license, then we can use AWS RDS for SQL Server. Otherwise we can use AWS Aurora DB, either MySQL or PostgreSQL. But for this we have to make some code adjustments.
 For Logging and Monitoring we should use AWS Cloud Watch. And for DB credentials we can use AWS Secrets Manager.
 
-![Unit & Integration Tests](https://github.com/imyounas/SF.IY.InsurancePolicy.DemoApp/SF.IP.Tests.PNG "Unit & Integration Tests")
+![Unit & Integration Tests](https://github.com/imyounas/SF.IY.InsurancePolicy.DemoApp/blob/main/SF.IP.Tests.PNG "Unit & Integration Tests")
