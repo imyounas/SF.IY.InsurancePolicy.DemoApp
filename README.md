@@ -78,6 +78,27 @@ Either use Visual Studio Docker Compose Tools to run the whole solution. Or you 
   ```
 AppSettings file is configured to connect to RabbitMQ on 'localhost'. You can change its value or can also provide equivalent Environment variables against AppSettings variables as done in Docker Compose file.
 If you want to use real SQL Server, then you need to provide its connection string in AppSettings. Or set "UseInMemoryDatabase": true in AppSettings, to use InMemory database.
+Here is AppSettings File:
+
+```
+{
+  "UseInMemoryDatabase": true,
+  "InMemoryDatabaseName": "SFInsurancePolicyDb",
+  "ConnectionStrings": {
+    "DefaultConnection": "server=WIC;initial catalog=SFInsurancePolicyDb;Persist Security Info=False;Integrated Security=true;Trusted_Connection=True;MultipleActiveResultSets=true;"
+  },
+
+  "RabbitMQ": {
+    "QueueExchange": "super-formula",
+    "QueueHost": "localhost",
+    "QueueUserName": "guest",
+    "QueuePassword": "guest",
+    "QueuePort": 5672,
+    "AccountingQueue": "accounting",
+    "StateRegulatoryQueue": "state.regulatory"
+  }
+}
+```
 
 ## State Regulation Validation Method Improvements
  I think once Insurance Policy has been created, then we should fire a Domain Event that will ingest/push it to a Message Queue. And the separate team working on it, implements a Microservice to perform the required operation/business logic in relation to State regulations there. And once they are done, then they should call main application API (Webhook/Callback URL), and then our application should notify the User and UI/Dashboard of the result.
