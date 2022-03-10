@@ -1,7 +1,7 @@
 ﻿
 namespace SF.IP.Application.Models.InsurancePolicy.Request;
 
-public class CreatePolicyRequestDTO : BaseRequestDTO
+public record CreatePolicyRequestDTO : BaseRequestDTO
 {
     public InsurancePolicyDTO InsurancePolicy { get; set; }
 }

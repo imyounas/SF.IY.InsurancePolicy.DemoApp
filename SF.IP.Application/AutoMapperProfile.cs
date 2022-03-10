@@ -3,50 +3,44 @@ using SF.IP.Application.Models.InsurancePolicy;
 using SF.IP.Domain.Entities;
 using SF.IP.Domain.ValueObjects;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SF.IP.Application
+namespace SF.IP.Application;
+public class AutoMapperProfile : Profile
 {
-    public class AutoMapperProfile : Profile
+    public AutoMapperProfile()
     {
-        public AutoMapperProfile()
-        {
-            CreateMap<InsurancePolicy, InsurancePolicyDTO>();
-            CreateMap<InsurancePolicyDTO, InsurancePolicy>();
+        CreateMap<InsurancePolicy, InsurancePolicyDTO>();
+        CreateMap<InsurancePolicyDTO, InsurancePolicy>();
 
-            CreateMap<Vehicle, VehicleDTO>();
-            CreateMap<VehicleDTO, Vehicle>();
+        CreateMap<Vehicle, VehicleDTO>();
+        CreateMap<VehicleDTO, Vehicle>();
 
-            CreateMap<Address, AddressDTO>();
-            CreateMap<AddressDTO, Address>();
+        CreateMap<Address, AddressDTO>();
+        CreateMap<AddressDTO, Address>();
 
-            CreateMap<PremiumPrice, PremiumPriceDTO>();
-            CreateMap<PremiumPriceDTO, PremiumPrice>();
+        CreateMap<PremiumPrice, PremiumPriceDTO>();
+        CreateMap<PremiumPriceDTO, PremiumPrice>();
 
-            CreateMap<string, Guid>().ConvertUsing(new GuidTypeConverter());
-        }
+        CreateMap<string, Guid>().ConvertUsing(new GuidTypeConverter());
     }
+}
 
-    public class GuidTypeConverter : ITypeConverter<string, Guid>
+public class GuidTypeConverter : ITypeConverter<string, Guid>
+{
+    public Guid Convert(string source, Guid destination, ResolutionContext context)
     {
-        public Guid Convert(string source, Guid destination, ResolutionContext context)
+        if (string.IsNullOrWhiteSpace(source))
         {
-            if(string.IsNullOrWhiteSpace(source))
-            {
-                return Guid.Empty;
-            }
-            else if(Guid.TryParse(source, out Guid conGuid))
-            {
-                return conGuid;
-            }
-            else
-            {
-                return Guid.Empty;
-            }
-            
+            return Guid.Empty;
         }
+        else if (Guid.TryParse(source, out Guid conGuid))
+        {
+            return conGuid;
+        }
+        else
+        {
+            return Guid.Empty;
+        }
+
     }
 }

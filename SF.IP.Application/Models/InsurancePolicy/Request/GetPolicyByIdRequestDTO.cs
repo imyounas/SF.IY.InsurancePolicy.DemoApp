@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SF.IP.Application.Models.InsurancePolicy.Request
 {
-    public class GetPolicyByIdRequestDTO:BaseRequestDTO
+    public record GetPolicyByIdRequestDTO:BaseRequestDTO
     {
-        public Guid PolicyId { get; set; }
+        public string PolicyId { get; set; } // here I am assuming PolicyId as PK of Policy Entity
         public string LicenseNumber { get; set; } // why the doc says, license number to be required here ?
     }
 }

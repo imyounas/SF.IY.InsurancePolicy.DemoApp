@@ -4,85 +4,82 @@ using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SF.IP.Infrastructure.MessageQueueHandler
+namespace SF.IP.Infrastructure.MessageQueueHandler;
+
+public class MQPublisher : IMQPublisher
 {
-    public class MQPublisher : IMQPublisher
+    private readonly DefaultObjectPool<IModel> _mqConnectionPool;
+    private readonly ILogger<RabbitMQPooledObjectPolicy> _logger;
+    private readonly string _exchangeType;
+    public MQPublisher(IPooledObjectPolicy<IModel> objectPolicy, ILogger<RabbitMQPooledObjectPolicy> logger)
     {
-        private readonly DefaultObjectPool<IModel> _mqConnectionPool;
-        private readonly ILogger<RabbitMQPooledObjectPolicy> _logger;
-        private readonly string _exchangeType;
-        public MQPublisher(IPooledObjectPolicy<IModel> objectPolicy, ILogger<RabbitMQPooledObjectPolicy> logger)
+        _logger = logger;
+        _mqConnectionPool = new DefaultObjectPool<IModel>(objectPolicy, Application.Common.SFConstants.MAX_RETAINED_MQ_CONNECTIONS);
+        _exchangeType = ExchangeType.Direct;
+    }
+
+    public async Task<bool> PublishAsync<T>(string exchangeName, string queueName, T message, string routingKey)
+    {
+        bool status = true;
+
+        if (message == null)
         {
-            _logger = logger;
-            _mqConnectionPool = new DefaultObjectPool<IModel>(objectPolicy, Application.Common.SFConstants.MAX_RETAINED_MQ_CONNECTIONS);
-            _exchangeType = ExchangeType.Direct;
+            status = false;
+            return status;
         }
 
-        public async Task<bool> PublishAsync<T>(string exchangeName, string queueName, T message, string routingKey)
+        var _channel = _mqConnectionPool.Get();
+
+        try
         {
-            bool status = true;
-
-            if (message == null)
+            if (_exchangeType == ExchangeType.Direct)
             {
-                status = false;
-                return status;
+                routingKey = queueName;
             }
 
-            var _channel = _mqConnectionPool.Get();
+            _channel.ExchangeDeclare(exchange: exchangeName,
+                                type: _exchangeType,
+                                durable: true,
+                                autoDelete: false,
+                                arguments: null);
 
-            try
-            {
-                if(_exchangeType == ExchangeType.Direct)
-                {
-                    routingKey = queueName;
-                }
+            _channel.QueueDeclare(queue: queueName,
+                             durable: true,
+                             exclusive: false,
+                             autoDelete: false,
+                             arguments: null);
 
-                _channel.ExchangeDeclare(exchange: exchangeName,
-                                    type: _exchangeType,
-                                    durable: true,
-                                    autoDelete: false,
-                                    arguments: null);
+            _channel.QueueBind(queue: queueName,
+                             exchange: exchangeName,
+                             routingKey: routingKey);
 
-                _channel.QueueDeclare(queue: queueName,
-                                 durable: true,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
+            var messageBody = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-                _channel.QueueBind(queue: queueName,
-                                 exchange: exchangeName,
-                                 routingKey: routingKey);
+            var properties = _channel.CreateBasicProperties();
+            properties.Persistent = true;
+            properties.MessageId = Guid.NewGuid().ToString();
+            properties.Type = message.GetType().FullName;
 
-                var messageBody = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+            _channel.BasicPublish(exchange: exchangeName,
+                                routingKey: routingKey,
+                                basicProperties: properties,
+                                body: messageBody);
 
-                var properties = _channel.CreateBasicProperties();
-                properties.Persistent = true;
-                properties.MessageId = Guid.NewGuid().ToString();
-                properties.Type = message.GetType().FullName;
-
-                _channel.BasicPublish(exchange: exchangeName,
-                                    routingKey: routingKey,
-                                    basicProperties: properties,
-                                    body: messageBody);
-
-            }
-
-            catch (Exception ex)
-            {
-                _logger.LogError($"Some error while publishing message to [{queueName}]. Error: [{ex.Message}]");
-                status = false;
-            }
-            finally
-            {
-                _mqConnectionPool.Return(_channel);
-            }
-
-            return await Task.FromResult(status);
         }
+
+        catch (Exception ex)
+        {
+            _logger.LogError($"Some error while publishing message to [{queueName}]. Error: [{ex.Message}]");
+            status = false;
+        }
+        finally
+        {
+            _mqConnectionPool.Return(_channel);
+        }
+
+        return await Task.FromResult(status);
     }
 }

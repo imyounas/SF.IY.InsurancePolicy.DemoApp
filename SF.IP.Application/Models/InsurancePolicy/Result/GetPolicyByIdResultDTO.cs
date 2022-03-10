@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+namespace SF.IP.Application.Models.InsurancePolicy.Result;
 
-namespace SF.IP.Application.Models.InsurancePolicy.Result
+public record GetPolicyByIdResultDTO : BaseResultDTO
 {
-    public class GetPolicyByIdResultDTO : BaseResultDTO
-    {
-        public InsurancePolicyDTO InsurancePolicy { get; set; }
-    }
+    public InsurancePolicyDTO InsurancePolicy { get; set; }
 }
+

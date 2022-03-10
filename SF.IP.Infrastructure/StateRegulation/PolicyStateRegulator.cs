@@ -13,10 +13,16 @@ namespace SF.IP.Infrastructure.StateRegulation
         public async Task<(bool Status, string Reason)> ValidatePolicyFromStateRegulator(InsurancePolicyDTO policy)
         {
             var random = new Random().Next(1, 5);
-            (bool Status, string Reason) validationResult = (false, "Not in mood to approve this policy, cause I can !");
-            if (random % 2 == 0)
+            (bool Status, string Reason) validationResult = (true, "Okay, I approve it, cause I can !");
+            //if (random % 2 == 0)
+            //{
+            //    validationResult = (false, "Not in mood to approve this policy, cause why not !");
+            //}
+
+            // to make it more predicatble for integration testing
+            if (policy.FirstName.ToLower() == "trump")
             {
-                validationResult = (true, "Okay, I approve it, cause I can !");
+                validationResult = (false, "Not in mood to approve this policy, cause I can !");
             }
 
             // real application will have here 3rd party API call for which we need to wait.

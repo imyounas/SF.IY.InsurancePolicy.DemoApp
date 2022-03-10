@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SF.IP.Application.Models.InsurancePolicy.Result
+﻿
+namespace SF.IP.Application.Models.InsurancePolicy.Result;
+public record CreatePolicyResultDTO : BaseResultDTO
 {
-    public class CreatePolicyResultDTO:BaseResultDTO
-    {
-        public string PolicyId { get; set; } // new created policyId
-    }
+    public string PolicyId { get; set; } // new created policyId , here I am assuming PolicyId as PK of Policy Entity
 }
+

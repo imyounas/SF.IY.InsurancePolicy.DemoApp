@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace SF.IP.Application.Interfaces.MessageQueue
+namespace SF.IP.Application.Interfaces.MessageQueue;
+
+public interface IMQSubscriber
 {
-    public interface IMQSubscriber
-    {
-        void SubscribeAsync<T>(Func<T, Task<bool>> callback);
-    }
+    void SubscribeAsync<T>(Func<T, Task<bool>> callback);
 }
+

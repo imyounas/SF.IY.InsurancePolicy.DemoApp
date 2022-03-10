@@ -3,72 +3,67 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace SF.IP.Infrastructure.MessageQueueHandler
+namespace SF.IP.Infrastructure.MessageQueueHandler;
+
+// Source Refrence : https://www.c-sharpcorner.com/article/publishing-rabbitmq-message-in-asp-net-core/
+public class RabbitMQPooledObjectPolicy : IPooledObjectPolicy<IModel>
 {
-    // Source Refrence : https://www.c-sharpcorner.com/article/publishing-rabbitmq-message-in-asp-net-core/
-    public class RabbitMQPooledObjectPolicy : IPooledObjectPolicy<IModel>
+    private readonly AppSettings _appSettings;
+    private readonly ILogger<RabbitMQPooledObjectPolicy> _logger;
+    private readonly IConnection _connection;
+
+    public RabbitMQPooledObjectPolicy(AppSettings appSettings, ILogger<RabbitMQPooledObjectPolicy> logger)
     {
-        private readonly AppSettings _appSettings;
-        private readonly ILogger<RabbitMQPooledObjectPolicy> _logger;
-        private readonly IConnection _connection;
+        _appSettings = appSettings;
+        _logger = logger;
+        _connection = GetConnection();
 
-        public RabbitMQPooledObjectPolicy(AppSettings appSettings, ILogger<RabbitMQPooledObjectPolicy> logger)
+    }
+
+    private IConnection GetConnection()
+    {
+        var factory = new ConnectionFactory()
         {
-            _appSettings = appSettings;
-            _logger = logger;
-            _connection = GetConnection();
+            HostName = _appSettings.RabbitMQ.QueueHost,
+            UserName = _appSettings.RabbitMQ.QueueUserName,
+            Password = _appSettings.RabbitMQ.QueuePassword,
+            Port = _appSettings.RabbitMQ.QueuePort
+        };
 
+        try
+        {
+            _logger.LogInformation($"[RabbitMQPooledObjectPolicy] GetConnection [{_appSettings.RabbitMQ.QueueHost}] , [{_appSettings.RabbitMQ.QueueUserName}] , [{_appSettings.RabbitMQ.QueuePassword}] ,  [{_appSettings.RabbitMQ.QueuePort}]");
+            return factory.CreateConnection();
+        }
+        catch (BrokerUnreachableException ex)
+        {
+            _logger.LogError($"[RabbitMQPooledObjectPolicy] Error while setting up RabbitMQ Connection. Error [{ex.Message}]");
+            _logger.LogError($"[RabbitMQPooledObjectPolicy] Sleeping for 1 second and trying again");
+            Thread.Sleep(1000);
+            return factory.CreateConnection();
         }
 
-        private IConnection GetConnection()
+
+    }
+
+    public IModel Create()
+    {
+        return _connection.CreateModel();
+    }
+
+    public bool Return(IModel obj)
+    {
+        if (obj.IsOpen)
         {
-            var factory = new ConnectionFactory()
-            {
-                HostName = _appSettings.RabbitMQ.QueueHost,
-                UserName = _appSettings.RabbitMQ.QueueUserName,
-                Password = _appSettings.RabbitMQ.QueuePassword,
-                Port = _appSettings.RabbitMQ.QueuePort
-            };
-
-            try
-            {
-                _logger.LogInformation($"[RabbitMQPooledObjectPolicy] GetConnection [{_appSettings.RabbitMQ.QueueHost}] , [{_appSettings.RabbitMQ.QueueUserName}] , [{_appSettings.RabbitMQ.QueuePassword}] ,  [{_appSettings.RabbitMQ.QueuePort}]");
-                return factory.CreateConnection();
-            }
-            catch (BrokerUnreachableException ex)
-            {
-                _logger.LogError($"[RabbitMQPooledObjectPolicy] Error while setting up RabbitMQ Connection. Error [{ex.Message}]");
-                _logger.LogError($"[RabbitMQPooledObjectPolicy] Sleeping for 1 second and trying again");
-                Thread.Sleep(1000);
-                return factory.CreateConnection();
-            }
-
-          
+            return true;
         }
-
-        public IModel Create()
+        else
         {
-            return _connection.CreateModel();
-        }
-
-        public bool Return(IModel obj)
-        {
-            if (obj.IsOpen)
-            {
-                return true;
-            }
-            else
-            {
-                obj?.Dispose();
-                return false;
-            }
+            obj?.Dispose();
+            return false;
         }
     }
 }
+
