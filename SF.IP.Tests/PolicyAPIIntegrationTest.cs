@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SF.IP.Application.Models.InsurancePolicy;
 using SF.IP.Application.Models.InsurancePolicy.Request;
 using System;
+using System.ComponentModel;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
@@ -20,6 +21,7 @@ public class PolicyAPIIntegrationTest : BaseServiceUnitTest, IClassFixture<WebAp
     }
 
     [Fact]
+    [Description("This integration test, is validating the successful creation of Insurance Policy using IPController POST method")]
     public async Task PolicyCreationAPITest_Passing()
     {
         var client = _factory.CreateClient();
@@ -45,6 +47,7 @@ public class PolicyAPIIntegrationTest : BaseServiceUnitTest, IClassFixture<WebAp
     }
 
     [Fact]
+    [Description("This integration test, is testing that when State Regulation validation fails then API returns HTTP (500) status")]
     public async Task PolicyCreationAPITest_FailingDueToStateRegulations()
     {
         var client = _factory.CreateClient();
@@ -72,6 +75,7 @@ public class PolicyAPIIntegrationTest : BaseServiceUnitTest, IClassFixture<WebAp
     }
 
     [Fact]
+    [Description("This integration test, is validating that API is returning Policy against a correct License Number")]
     public async Task GetPolicyByLicenseNumberAPITest_Passing()
     {
         var client = _factory.CreateClient();
@@ -100,6 +104,7 @@ public class PolicyAPIIntegrationTest : BaseServiceUnitTest, IClassFixture<WebAp
     }
 
     [Fact]
+    [Description("This integration test, is validating that API is not returning Policy when incorrect License Number is provided")]
     public async Task GetPolicyByLicenseNumberAPITest_Failing()
     {
         var client = _factory.CreateClient();

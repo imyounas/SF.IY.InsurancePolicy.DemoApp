@@ -3,6 +3,7 @@ using SF.IP.Application.Common;
 using SF.IP.Application.Models.InsurancePolicy;
 using SF.IP.Application.Validators.PolicyInsurance;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using Xunit;
 
@@ -18,6 +19,7 @@ public class InsurancePolicyUnitTest : BaseServiceUnitTest
     }
 
     [Fact]
+    [Description("This Unit test, is validating that when invalid LastName is provided then validator service is returning correct error")]
     public void LastNameIsInvalid()
     {
         var policyDTO = new InsurancePolicyDTO()
@@ -39,6 +41,7 @@ public class InsurancePolicyUnitTest : BaseServiceUnitTest
     }
 
     [Fact]
+    [Description("This Unit test, is validating that when invalid LicenseNumber is provided then validator service is returning correct error")]
     public void LicenseNumberShouldBeOfInCorrectFormat()
     {
         var policyDTO = new InsurancePolicyDTO()
@@ -60,6 +63,7 @@ public class InsurancePolicyUnitTest : BaseServiceUnitTest
     }
 
     [Fact]
+    [Description("This Unit test, is validating that when valid LicenseNumber is provided then validator service is accepting it")]
     public void LicenseNumberShouldBeOfCorrectFormat()
     {
         var policyDTO = new InsurancePolicyDTO()
@@ -81,6 +85,7 @@ public class InsurancePolicyUnitTest : BaseServiceUnitTest
     }
 
     [Fact]
+    [Description("This Unit test, is validating that when Effective Date is less than 30 days in future, then it returns correct Error")]
     public void EffectiveDateShouldBeInvalid()
     {
         var policyDTO = new InsurancePolicyDTO()
@@ -102,6 +107,7 @@ public class InsurancePolicyUnitTest : BaseServiceUnitTest
     }
 
     [Fact]
+    [Description("This Unit test, is validating that when Vehicle Registeration Date is >= 1998, then it returns correct Error")]
     public void VehicleRegisterationYearShouldBeInvalid()
     {
         var policyDTO = new InsurancePolicyDTO()
@@ -123,6 +129,7 @@ public class InsurancePolicyUnitTest : BaseServiceUnitTest
     }
 
     [Fact]
+    [Description("This Unit test, is validating that when incorrect US address is provided, then it returns correct Error")]
     public void PolicyUSAddressShouldBeInvalid()
     {
         var policyDTO = new InsurancePolicyDTO()
@@ -144,6 +151,7 @@ public class InsurancePolicyUnitTest : BaseServiceUnitTest
     }
 
     [Fact]
+    [Description("This Unit test, is validating that when all requirenments are met, then validation resturns no error")]
     public void PolicyDTOShouldBeValid()
     {
         var policyDTO = new InsurancePolicyDTO()
